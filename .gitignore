@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Database files
+*.db
+
+# Ignore Mac system files
+.DS_Store
