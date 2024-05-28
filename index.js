@@ -1,17 +1,16 @@
 const { Client, GatewayIntentBits, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, VoiceConnectionStatus, AudioPlayerStatus, entersState } = require('@discordjs/voice');
-const { FFmpeg } = require('prism-media');
 const fs = require('fs');
+const path = require('path');
 const { getServerData, saveServerData } = require('./database');
 const logger = require('./logger');
 require('dotenv').config();
 
+// Use ffmpeg-static
+const ffmpegPath = require('ffmpeg-static');
+
 // Set the FFmpeg path
-FFmpeg.getInfo = () => ({
-    command: 'C:\\Users\\navee\\Downloads\\ffmpeg-7.0-essentials_build\\ffmpeg-7.0-essentials_build\\bin\\ffmpeg.exe',
-    input: ['-i', 'pipe:0'],
-    output: ['-f', 'opus', 'pipe:1']
-});
+process.env.FFMPEG_PATH = ffmpegPath;
 
 const client = new Client({
     intents: [
@@ -26,6 +25,7 @@ const client = new Client({
 const serverData = {}; // Store data for each server in memory
 const audioLength = 18; // Length of the audio in seconds
 const extraTime = 10; // Extra time for delays and leaving VC
+const screamFilePath = path.join(__dirname, 'scream.mp3'); // Use relative path
 
 const getRandomInterval = (frequency) => {
     return Math.floor(Math.random() * (frequency - audioLength - extraTime)) * 1000;
@@ -65,7 +65,7 @@ const startInterval = (guildId) => {
                     connection.on(VoiceConnectionStatus.Ready, () => {
                         logger.info(`Connected to ${channel.name}`);
                         const player = createAudioPlayer();
-                        const resource = createAudioResource(serverData[guildId].screamFile);
+                        const resource = createAudioResource(screamFilePath);
 
                         player.play(resource);
                         connection.subscribe(player);
@@ -133,7 +133,7 @@ client.once('ready', () => {
                     frequency: 3600, // Default to 1 hour
                     currentTimeout: null,
                     isPaused: false,
-                    screamFile: 'C:\\Users\\navee\\Desktop\\My Projects\\EchoShout\\scream.mp3' // Correct path to your scream audio file
+                    screamFile: screamFilePath // Correct path to your scream audio file
                 };
             } else {
                 serverData[guild.id] = {
@@ -143,7 +143,7 @@ client.once('ready', () => {
                     frequency: data.frequency,
                     currentTimeout: null,
                     isPaused: data.is_paused === 1,
-                    screamFile: 'C:\\Users\\navee\\Desktop\\My Projects\\EchoShout\\scream.mp3' // Correct path to your scream audio file
+                    screamFile: screamFilePath // Correct path to your scream audio file
                 };
             }
             startInterval(guild.id);
@@ -164,7 +164,7 @@ client.on('interactionCreate', async interaction => {
             frequency: 3600, // Default to 1 hour
             currentTimeout: null,
             isPaused: false,
-            screamFile: 'C:\\Users\\navee\\Desktop\\My Projects\\EchoShout\\scream.mp3' // Correct path to your scream audio file
+            screamFile: screamFilePath // Correct path to your scream audio file
         };
         startInterval(guildId);
     }
