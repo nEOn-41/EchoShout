@@ -6,11 +6,6 @@ const { getServerData, saveServerData } = require('./database');
 const logger = require('./logger');
 require('dotenv').config();
 
-// Use ffmpeg-static
-const ffmpegPath = require('ffmpeg-static');
-
-// Set the FFmpeg path
-process.env.FFMPEG_PATH = ffmpegPath;
 
 const client = new Client({
     intents: [

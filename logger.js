@@ -9,7 +9,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 const logger = createLogger({
     level: 'info',
     format: combine(
-        label({ label: 'DiscordBot' }),
+        label({ label: 'EchoShout' }),
         timestamp(),
         myFormat
     ),
