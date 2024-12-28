@@ -39,7 +39,7 @@ EchoShout is a Discord bot designed to:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/username/EchoShout.git
+   git clone https://github.com/nEOn-41/EchoShout.git
    cd EchoShout
    ```
 
